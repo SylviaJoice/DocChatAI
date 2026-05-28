@@ -1,4 +1,5 @@
 import os
+import io
 from docx import Document
 from PIL import Image
 import pandas as pd
@@ -134,14 +135,16 @@ if uploaded_file:
     # IMAGE
     elif uploaded_file.name.endswith(("png", "jpg", "jpeg", "webp")):
 
-        image = Image.open(uploaded_file).convert("RGB")
+     image = Image.open(uploaded_file).convert("RGB")
+
+    img_byte_arr = io.BytesIO()
+    image.save(img_byte_arr, format="PNG")
 
     st.session_state.uploaded_image = image
-    st.session_state.image_bytes = uploaded_file.getvalue()
-    st.session_state.image_type = uploaded_file.type
+    st.session_state.image_bytes = img_byte_arr.getvalue()
+    st.session_state.image_type = "image/png"
 
     text = "Image uploaded for visual question answering."
-
     st.session_state.document_text = text
 
     st.success("Document uploaded successfully. You can start asking questions.")
