@@ -1,3 +1,4 @@
+import os
 from docx import Document
 from PIL import Image
 import pandas as pd
@@ -5,7 +6,9 @@ import streamlit as st
 import fitz
 import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyDVHvhcrNu4gtcE7gJ13S7AWSNr1yqpp6o")
+genai.configure(
+    api_key=st.secrets["AIzaSyDVHhcrNu4gtcE7gJ13S7AWSNr1yqpp6o"]
+)
 model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
 st.set_page_config(page_title="DocChatAI", layout="wide")
