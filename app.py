@@ -54,6 +54,11 @@ if "dataframe" not in st.session_state:
     st.session_state.dataframe = None
 if "uploaded_image" not in st.session_state:
     st.session_state.uploaded_image = None
+if "image_bytes" not in st.session_state:
+    st.session_state.image_bytes = None
+
+if "image_type" not in st.session_state:
+    st.session_state.image_type = None
 
 def find_column_from_question(df, question):
     question = question.lower()
@@ -131,9 +136,11 @@ if uploaded_file:
 
         image = Image.open(uploaded_file).convert("RGB")
 
-        st.session_state.uploaded_image = image
+    st.session_state.uploaded_image = image
+    st.session_state.image_bytes = uploaded_file.getvalue()
+    st.session_state.image_type = uploaded_file.type
 
-        text = "Image uploaded for visual question answering."
+    text = "Image uploaded for visual question answering."
 
     st.session_state.document_text = text
 
@@ -228,12 +235,19 @@ if uploaded_file:
             # IMAGE QA
             if st.session_state.uploaded_image is not None:
 
+                image_part = {
+                    "mime_type": st.session_state.image_type,
+                    "data": st.session_state.image_bytes
+                }
+
                 with st.chat_message("assistant"):
-
                     with st.spinner("Analyzing image..."):
+                        response = model.generate_content([
+                            question,
+                            image_part
+                        ])
 
-                        answer = "Image question answering is currently disabled in the deployed version."
-
+                        answer = response.text
                         st.write(answer)
 
             # NORMAL DOCUMENT QA
@@ -256,24 +270,7 @@ if uploaded_file:
                 """
 
                 with st.chat_message("assistant"):
-
                     with st.spinner("Generating answer..."):
-
                         response = model.generate_content(prompt)
-
                         answer = response.text
-
                         st.write(answer)
-
-        st.session_state.chat_history.append({
-            "question": question,
-            "answer": answer
-        })
-
-else:
-
-    st.info("Upload a document from the sidebar to begin.")
-
-st.markdown("""
-<div class="footer">DocChatAI</div>
-""", unsafe_allow_html=True)
