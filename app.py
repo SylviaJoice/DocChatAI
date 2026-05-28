@@ -129,7 +129,7 @@ if uploaded_file:
     # IMAGE
     elif uploaded_file.name.endswith(("png", "jpg", "jpeg", "webp")):
 
-        image = Image.open(uploaded_file)
+        image = Image.open(uploaded_file).convert("RGB")
 
         st.session_state.uploaded_image = image
 
