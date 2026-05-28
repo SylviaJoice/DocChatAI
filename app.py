@@ -7,8 +7,10 @@ import streamlit as st
 import fitz
 import google.generativeai as genai
 
+import os
+
 genai.configure(
-    api_key=st.secrets["GEMINI_API_KEY"]
+    api_key=os.environ["GEMINI_API_KEY"]
 )
 model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
