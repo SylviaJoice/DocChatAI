@@ -232,12 +232,7 @@ if uploaded_file:
 
                     with st.spinner("Analyzing image..."):
 
-                        response = model.generate_content([
-                            question,
-                            st.session_state.uploaded_image
-                        ])
-
-                        answer = response.text
+                        answer = "Image question answering is currently disabled in the deployed version."
 
                         st.write(answer)
 
